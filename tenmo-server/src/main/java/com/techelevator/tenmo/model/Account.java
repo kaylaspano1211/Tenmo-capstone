@@ -6,11 +6,7 @@ import java.security.Principal;
 public class Account {
 
    private BigDecimal balance;
-   private int accountId;
 
-    public int getAccountId() {
-        return accountId;
-    }
 
 
     public BigDecimal getBalance() {

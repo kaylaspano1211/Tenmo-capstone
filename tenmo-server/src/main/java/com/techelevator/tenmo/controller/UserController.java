@@ -15,19 +15,19 @@ import java.math.BigDecimal;
 import java.security.Principal;
 
 
-@PreAuthorize("isAuthenticated")
+@PreAuthorize("isAuthenticated()")
 @RestController
 public class UserController {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
     private AccountDao accountDao;
 
     @RequestMapping(path = "/tenmo/accounts", method = RequestMethod.GET)
     public Account retrieveBalance(Principal principal){
-        Account accountName = principal.getName();
-
-        Account account = accountDao.retrieveBalance();
+        int id = userDao.findIdByUsername(principal.getName());
+        Account account = accountDao.retrieveBalance(id);
 
         return account;
     }

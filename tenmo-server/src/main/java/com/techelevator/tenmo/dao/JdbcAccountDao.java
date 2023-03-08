@@ -25,7 +25,7 @@ public class JdbcAccountDao implements AccountDao{
 
         String sql = "SELECT balance FROM account " +
                 "JOIN tenmo_user ON tenmo_user.user_id = account.user_id " +
-                "WHERE user_id = ?;";
+                "WHERE tenmo_user.user_id = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
         if (results.next()){
             accountBalance = mapRowToAccount(results);
@@ -36,8 +36,7 @@ public class JdbcAccountDao implements AccountDao{
 
     private Account mapRowToAccount(SqlRowSet rs) {
         Account account = new Account();
-        account.getBalance(rs.getBigDecimal("balance"));
-        account.getAccountId(rs.getInt("account_id"));
+        account.setBalance(rs.getBigDecimal("balance"));
         return account;
     }
 }
