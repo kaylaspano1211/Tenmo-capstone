@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +96,19 @@ public class JdbcUserDao implements UserDao {
 
         return true;
     }
+
+
+
+
+
+//    public BigDecimal updatedAccountBalance(int id, Principal principal){
+//        BigDecimal fromAccountBalance;
+//        BigDecimal toAccountBalance;
+//
+//        String sql = "SELECT user_id FROM tenmo_user WHERE user_id = ?;";
+//        return
+//    }
+
 
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
