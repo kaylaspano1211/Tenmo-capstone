@@ -81,7 +81,7 @@ public class JbdcTransferDao implements TransferDao{
 
         SqlRowSet resultsTo = jdbcTemplate.queryForRowSet(sqlTo, userId);
 
-        while(results.next()) {
+        while(resultsTo.next()) {
             transferList.add(mapRowToTransfer(resultsTo));
         }
         return transferList;
