@@ -5,6 +5,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class JbdcTransferDao implements TransferDao{
 
@@ -52,6 +56,47 @@ public class JbdcTransferDao implements TransferDao{
 
         return addedTransfer;
     }
+
+
+    public List<Transfer> transferList (int userId){
+        List<Transfer> transferList = new ArrayList<>();
+
+        String sqlFrom = "SELECT transfer.transfer_id, tenmo_user.username, transfer.amount " +
+                "FROM transfer " +
+                "JOIN account ON transfer.account_from = account.account_id " +
+                "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
+                "WHERE tenmo_user.username = ?;";
+
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sqlFrom, userId);
+
+        while(results.next()) {
+            transferList.add(mapRowToTransfer(results));
+
+        }
+
+        String sqlTo = "SELECT transfer.transfer_id, tenmo_user.username, transfer.amount " +
+                "FROM transfer " +
+                "JOIN account ON transfer.account_to = account.account_id " +
+                "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
+                "WHERE tenmo_user.username = ?;";
+
+        SqlRowSet resultsTo = jdbcTemplate.queryForRowSet(sqlFrom, userId);
+
+        while(results.next()) {
+            transferList.add(mapRowToTransfer(resultsTo));
+
+        }
+
+
+        return transferList;
+    }
+
+
+
+
+
+
+
 
     private Transfer mapRowToTransfer(SqlRowSet result) {
         Transfer transfer = new Transfer();

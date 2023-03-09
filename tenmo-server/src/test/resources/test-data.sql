@@ -77,6 +77,6 @@ INSERT INTO tenmo_user (username,password_hash,role) VALUES ('user3','user3','RO
 
 INSERT INTO account (user_id, balance) VALUES (1001, 1000); -- 2001
 INSERT INTO account (user_id, balance) VALUES (1002, 1000); -- 2002
-INSERT INTO account (user_id, balance) VALUES (1002, 1000); -- 2003
+INSERT INTO account (user_id, balance) VALUES (1003, 1000); -- 2003
 
 COMMIT TRANSACTION;
