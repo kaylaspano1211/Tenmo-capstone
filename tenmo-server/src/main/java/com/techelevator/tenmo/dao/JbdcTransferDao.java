@@ -42,8 +42,8 @@ public class JbdcTransferDao implements TransferDao{
             addedTransfer = mapRowToTransfer(resultsToAccount);
         }
 
-        String sqlInsert = "INSERT INTO transfer (account_to, account_from, amount) " +
-                "VALUES (?, ?, ?) RETURNING transfer.transfer_id;";
+        String sqlInsert = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_to, account_from, amount) " +
+                "VALUES (2, 2, ?, ?, ?) RETURNING transfer.transfer_id;";
         Integer newId = jdbcTemplate.queryForObject(sqlInsert, Integer.class, addedTransfer.getAccountTo(),
                 addedTransfer.getAccountFrom(), addedTransfer.getAmount());
         addedTransfer.setTransferId(newId);

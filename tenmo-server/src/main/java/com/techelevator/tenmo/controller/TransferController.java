@@ -28,7 +28,9 @@ public class TransferController {
     @Autowired
     private TransferDao transferDao;
 
-    @RequestMapping(path = "/tenmo/accounts", method = RequestMethod.GET)
+
+
+    @RequestMapping(path = "tenmo/accounts", method = RequestMethod.GET)
     public Account retrieveBalance(Principal principal){
         int id = userDao.findIdByUsername(principal.getName());
         Account account = accountDao.retrieveBalance(id);
@@ -36,14 +38,14 @@ public class TransferController {
         return account;
     }
 
-    @RequestMapping(path = "/tenmo/transfers", method = RequestMethod.GET)
+    @RequestMapping(path = "tenmo/transfers", method = RequestMethod.GET)
     public List<Transfer> transferTEBucks(Principal principal){
         int id = userDao.findIdByUsername(principal.getName());
 
         return transferDao.transferList(id);
     }
 
-    @RequestMapping(path = "/tenmo/users", method = RequestMethod.GET)
+    @RequestMapping(path = "tenmo/users", method = RequestMethod.GET)
     public  List<User> filterUserList (Principal principal){
         int id = userDao.findIdByUsername(principal.getName());
 
