@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TenmoService {
@@ -35,19 +36,18 @@ public class TenmoService {
 
     public List<User> filteredUserList(User user) {
         User[] users = null;
-        List<User> returnedList = new ArrayList<>();
-        User currentUser = new User();
+        //User currentUser = new User();
+        List<User> usersList = new ArrayList<>();
 
-        ResponseEntity<User[]> response = restTemplate.exchange(baseUrl + "tenmo/accounts", HttpMethod.GET, makeAuthEntity(), User[].class);
+        ResponseEntity<User[]> response = restTemplate.exchange(baseUrl + "tenmo/users", HttpMethod.GET, makeAuthEntity(), User[].class);
         users = response.getBody();
-
         for(User newUser: users){
-            if (newUser != currentUser){
-                returnedList.add(user);
+            if (!newUser.equals(user)){
+                usersList.add(newUser);
             }
         }
 
-            return returnedList;
+            return usersList;
         }
 
 

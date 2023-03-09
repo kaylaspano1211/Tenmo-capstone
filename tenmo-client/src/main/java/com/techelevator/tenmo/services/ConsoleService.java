@@ -7,6 +7,7 @@ import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleService {
@@ -96,5 +97,11 @@ public class ConsoleService {
         System.out.println("\nYour current balance is: $" + balance);
     }
 
+    public void printFilteredList(List<User> filteredUserList) {
+        System.out.printf("%-5s %-5s\n", "UserId", "Username");
+        for (User user : filteredUserList) {
+           System.out.printf("%-5d %-5s\n", user.getId(), user.getUsername());
+       }
+    }
 
 }

@@ -103,7 +103,8 @@ public class App {
 	}
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
+		consoleService.printFilteredList(tenmoService.filteredUserList(currentUser.getUser()));
+
 		
 	}
 

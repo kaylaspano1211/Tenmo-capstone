@@ -46,8 +46,8 @@ public class TransferController {
     }
 
     @RequestMapping(path = "tenmo/users", method = RequestMethod.GET)
-    public  List<User> filterUserList (Principal principal){
-        int id = userDao.findIdByUsername(principal.getName());
+    public  List<User> filterUserList (){
+        //int id = userDao.findIdByUsername(principal.getName());
 
         return userDao.findAll();
     }
