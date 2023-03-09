@@ -19,6 +19,7 @@ public class JdbcUserDao implements UserDao {
 
     private static final BigDecimal STARTING_BALANCE = new BigDecimal("1000.00");
     private final JdbcTemplate jdbcTemplate;
+    private List<User> users = new ArrayList<>();
 
     public JdbcUserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -51,7 +52,6 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public List<User> findAll() {
-        List<User> users = new ArrayList<>();
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
@@ -59,9 +59,9 @@ public class JdbcUserDao implements UserDao {
             User user = mapRowToUser(results);
             users.add(user);
         }
-
         return users;
     }
+
 
     @Override
     public User findByUsername(String username) {

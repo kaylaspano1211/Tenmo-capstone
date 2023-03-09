@@ -9,7 +9,7 @@ public class App {
 
     private static final String API_BASE_URL = "http://localhost:8080/";
 
-    private final ConsoleService consoleService = new ConsoleService();
+    private final ConsoleService consoleService = new ConsoleService(API_BASE_URL);
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
 
     private AuthenticatedUser currentUser;
@@ -58,6 +58,7 @@ public class App {
         if (currentUser == null) {
             consoleService.printErrorMessage();
         }
+        consoleService.setAuthToken(currentUser.getToken());
     }
 
     private void mainMenu() {
@@ -85,7 +86,7 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-		// TODO Auto-generated method stub
+		consoleService.printBalance();
 		
 	}
 

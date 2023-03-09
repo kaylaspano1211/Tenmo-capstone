@@ -71,7 +71,6 @@ public class JbdcTransferDao implements TransferDao{
 
         while(results.next()) {
             transferList.add(mapRowToTransfer(results));
-
         }
 
         String sqlTo = "SELECT transfer.transfer_id, tenmo_user.username, transfer.amount " +
@@ -80,16 +79,14 @@ public class JbdcTransferDao implements TransferDao{
                 "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
                 "WHERE tenmo_user.username = ?;";
 
-        SqlRowSet resultsTo = jdbcTemplate.queryForRowSet(sqlFrom, userId);
+        SqlRowSet resultsTo = jdbcTemplate.queryForRowSet(sqlTo, userId);
 
         while(results.next()) {
             transferList.add(mapRowToTransfer(resultsTo));
-
         }
-
-
         return transferList;
     }
+
 
 
 

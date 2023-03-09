@@ -5,6 +5,7 @@ import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +41,13 @@ public class TransferController {
         int id = userDao.findIdByUsername(principal.getName());
 
         return transferDao.transferList(id);
+    }
 
+    @RequestMapping(path = "/tenmo/users", method = RequestMethod.GET)
+    public  List<User> filterUserList (Principal principal){
+        int id = userDao.findIdByUsername(principal.getName());
+
+        return userDao.findAll();
     }
 
 
