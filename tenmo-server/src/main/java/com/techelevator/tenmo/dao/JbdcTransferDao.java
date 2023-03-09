@@ -65,7 +65,7 @@ public class JbdcTransferDao implements TransferDao{
                 "FROM transfer " +
                 "JOIN account ON transfer.account_from = account.account_id " +
                 "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
-                "WHERE tenmo_user.username = ?;";
+                "WHERE tenmo_user.user_id = ?;";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlFrom, userId);
 
@@ -77,7 +77,7 @@ public class JbdcTransferDao implements TransferDao{
                 "FROM transfer " +
                 "JOIN account ON transfer.account_to = account.account_id " +
                 "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
-                "WHERE tenmo_user.username = ?;";
+                "WHERE tenmo_user.user_id = ?;";
 
         SqlRowSet resultsTo = jdbcTemplate.queryForRowSet(sqlTo, userId);
 

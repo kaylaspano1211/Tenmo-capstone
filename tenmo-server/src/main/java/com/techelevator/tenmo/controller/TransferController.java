@@ -7,10 +7,9 @@ import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -47,9 +46,13 @@ public class TransferController {
 
     @RequestMapping(path = "tenmo/users", method = RequestMethod.GET)
     public  List<User> filterUserList (){
-        //int id = userDao.findIdByUsername(principal.getName());
-
         return userDao.findAll();
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @RequestMapping(path = "tenmo/transfers", method = RequestMethod.POST)
+    public Transfer addTransfer(@RequestBody Transfer transfer){
+        return transferDao.addTransfer(transfer);
     }
 
 

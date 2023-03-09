@@ -104,8 +104,6 @@ public class App {
 
 	private void sendBucks() {
 		consoleService.printFilteredList(tenmoService.filteredUserList(currentUser.getUser()));
-
-		
 	}
 
 	private void requestBucks() {
