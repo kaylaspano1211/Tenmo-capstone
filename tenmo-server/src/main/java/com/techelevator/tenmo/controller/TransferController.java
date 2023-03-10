@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +53,13 @@ public class TransferController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "tenmo/transfers", method = RequestMethod.POST)
-    public Transfer addTransfer(@RequestBody Transfer transfer){
-        return transferDao.addTransfer(transfer);
+    public Transfer addTransfer(@Valid @RequestBody Transfer transfer, Principal principal){
+        BigDecimal balance = accountDao.retrieveBalance(userDao.findIdByUsername(principal.getName())).getBalance();
+        if (balance.compareTo(BigDecimal.valueOf(transfer.getAmount())) >= 0){
+            return transferDao.addTransfer(transfer);
+        }
+        //TODO check if null in the front end, if it is, throw exception
+        return null;
     }
 
 

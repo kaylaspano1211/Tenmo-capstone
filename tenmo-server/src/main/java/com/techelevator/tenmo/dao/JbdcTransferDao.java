@@ -20,47 +20,48 @@ public class JbdcTransferDao implements TransferDao{
 
     public Transfer addTransfer(Transfer transfer){
 
-        Transfer addedTransfer = new Transfer();
+
         //1. look up account id for the sender and receiver
         //2. insert into transfer table
         //3. update sender and receiver account
-
+        int userFromId = 0;
+        int userToId = 0;
         String sqlFrom = "SELECT account.account_id FROM account " +
-                "JOIN transfer ON transfer.account_from = account.account_id " +
-                "WHERE transfer.transfer_id = ?;";
-        SqlRowSet resultsFromAccount = jdbcTemplate.queryForRowSet(sqlFrom, transfer.getTransferId());
+                "JOIN tenmo_user ON tenmo_user.user_id = account.user_id " +
+                "WHERE account.user_id = ?;";
+        SqlRowSet resultsFromAccount = jdbcTemplate.queryForRowSet(sqlFrom, transfer.getUserFromId());
         if (resultsFromAccount.next()) {
-            addedTransfer = mapRowToTransfer(resultsFromAccount);
+            userFromId = resultsFromAccount.getInt("account_id");
         }
 
         String sqlTo = "SELECT account.account_id FROM account " +
-                "JOIN transfer ON transfer.account_to = account.account_id " +
-                "WHERE transfer.transfer_id = ?;";
-        SqlRowSet resultsToAccount = jdbcTemplate.queryForRowSet(sqlTo, transfer.getTransferId());
+                "JOIN tenmo_user ON tenmo_user.user_id = account.user_id " +
+                "WHERE account.user_id = ?;";
+        SqlRowSet resultsToAccount = jdbcTemplate.queryForRowSet(sqlTo, transfer.getUserToId());
         if (resultsToAccount.next()) {
-            addedTransfer = mapRowToTransfer(resultsToAccount);
+            userToId = resultsToAccount.getInt("account_id");
         }
 
         String sqlInsert = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
                 "VALUES (2, 2, ?, ?, ?) RETURNING transfer.transfer_id;";
         Integer newId = jdbcTemplate.queryForObject(sqlInsert, Integer.class,
-                transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
-        addedTransfer.setTransferId(newId);
+                userFromId, userToId, transfer.getAmount());
+        transfer.setTransferId(newId);
 
-        String updateFrom = "UPDATE account SET balance = balance - (SELECT amount FROM transfer WHERE transfer_id = ?) WHERE account_id = ?;";
-        jdbcTemplate.update(updateFrom, transfer.getAmount());
+        String updateFrom = "UPDATE account SET balance = balance - ? WHERE user_id = ?;";
+        jdbcTemplate.update(updateFrom, transfer.getAmount(), userFromId);
 
-        String updateTo = "UPDATE account SET balance = balance + (SELECT amount FROM transfer WHERE transfer_id = ?) WHERE account_id = ?;";
-        jdbcTemplate.update(updateTo, transfer.getAmount());
+        String updateTo = "UPDATE account SET balance = balance + ? WHERE user_id = ?;";
+        jdbcTemplate.update(updateTo, transfer.getAmount(), userToId);
 
-        return addedTransfer;
+        return transfer;
     }
 
 
     public List<Transfer> transferList (int userId){
         List<Transfer> transferList = new ArrayList<>();
 
-        String sqlFrom = "SELECT transfer.transfer_id, tenmo_user.username, transfer.amount " +
+        String sqlFrom = "SELECT transfer.transfer_id, transfer.amount, transfer.account_from, transfer.account_to, transfer.transfer_status_id, transfer.transfer_type_id " +
                 "FROM transfer " +
                 "JOIN account ON transfer.account_from = account.account_id " +
                 "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
@@ -72,7 +73,7 @@ public class JbdcTransferDao implements TransferDao{
             transferList.add(mapRowToTransfer(results));
         }
 
-        String sqlTo = "SELECT transfer.transfer_id, tenmo_user.username, transfer.amount " +
+        String sqlTo = "SELECT  transfer.transfer_id, transfer.amount, transfer.account_from, transfer.account_to, transfer.transfer_status_id, transfer.transfer_type_id " +
                 "FROM transfer " +
                 "JOIN account ON transfer.account_to = account.account_id " +
                 "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
@@ -90,8 +91,8 @@ public class JbdcTransferDao implements TransferDao{
     private Transfer mapRowToTransfer(SqlRowSet result) {
         Transfer transfer = new Transfer();
         transfer.setTransferId(result.getInt("transfer_id"));
-        transfer.setAccountFrom(result.getInt("account_from"));
-        transfer.setAccountTo(result.getInt("account_to"));
+        transfer.setUserFromId(result.getInt("account_from"));
+        transfer.setUserToId(result.getInt("account_to"));
         transfer.setTransferTypeId(result.getInt("transfer_type_id"));
         transfer.setAmount(result.getDouble("amount"));
         transfer.setTransferStatusId(result.getInt("transfer_status_id"));

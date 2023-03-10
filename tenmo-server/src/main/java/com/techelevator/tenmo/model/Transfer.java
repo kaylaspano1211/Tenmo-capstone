@@ -1,12 +1,15 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.Positive;
+
 public class Transfer {
 
     private int transferId;
     private int transferTypeId;
     private int transferStatusId;
-    private int accountFrom;
-    private int accountTo;
+    private int userFromId;
+    private int userToId;
+    @Positive
     private double amount;
 
     public int getTransferId() {
@@ -33,20 +36,20 @@ public class Transfer {
         this.transferStatusId = transferStatusId;
     }
 
-    public int getAccountFrom() {
-        return accountFrom;
+    public int getUserFromId() {
+        return userFromId;
     }
 
-    public void setAccountFrom(int accountFrom) {
-        this.accountFrom = accountFrom;
+    public void setUserFromId(int userFromId) {
+        this.userFromId = userFromId;
     }
 
-    public int getAccountTo() {
-        return accountTo;
+    public int getUserToId() {
+        return userToId;
     }
 
-    public void setAccountTo(int accountTo) {
-        this.accountTo = accountTo;
+    public void setUserToId(int userToId) {
+        this.userToId = userToId;
     }
 
     public double getAmount() {
