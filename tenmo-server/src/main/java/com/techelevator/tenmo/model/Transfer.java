@@ -56,4 +56,14 @@ public class Transfer {
     public void setAmount(double amount) {
         this.amount = amount;
     }
-}
+
+//    public String toString() {
+//        return "Transfer{" +
+//                "transferId=" + transferId +
+//                ", transferTypeId=" + transferTypeId +
+//                ", transferStatusId=" + transferStatusId +
+//                ", accountFrom=" + accountFrom +
+//                ", accountTo=" + accountTo +
+//                ", amount=" + amount +
+//                '}';
+    }
