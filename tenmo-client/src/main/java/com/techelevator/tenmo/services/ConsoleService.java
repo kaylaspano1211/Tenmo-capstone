@@ -1,12 +1,14 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 import java.util.Scanner;
 
@@ -104,4 +106,11 @@ public class ConsoleService {
        }
     }
 
-}
+    public void printTransferList(List<Transfer> transferList) {
+        System.out.printf("%-5s %-5s %-5s\n", "Transfers ID", "From/To", "Amount");
+        for (Transfer transfer : transferList) {
+                System.out.printf("%-5d %-5s %-5d\n", transfer.getTransferId(), transfer.getUsernameFrom(), transfer.getAmount());
+                System.out.printf("%-5d %-5s %-5d\n", transfer.getTransferId(), transfer.getUsernameTo(), transfer.getAmount());
+            }
+        }
+    }

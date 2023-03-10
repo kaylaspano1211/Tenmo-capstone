@@ -30,7 +30,6 @@ public class TransferController {
     private TransferDao transferDao;
 
 
-
     @RequestMapping(path = "tenmo/accounts", method = RequestMethod.GET)
     public Account retrieveBalance(Principal principal){
         int id = userDao.findIdByUsername(principal.getName());
@@ -39,15 +38,16 @@ public class TransferController {
         return account;
     }
 
-    @RequestMapping(path = "tenmo/transfers", method = RequestMethod.GET)
-    public List<Transfer> transferTEBucks(Principal principal){
-        int id = userDao.findIdByUsername(principal.getName());
-
-        return transferDao.transferList(id);
-    }
+//    @RequestMapping(path = "tenmo/transfers", method = RequestMethod.GET)
+//    public List<Transfer> transferTEBucks(Principal principal){
+//        int id = userDao.findIdByUsername(principal.getName());
+//
+//        return transferDao.transferList(id);
+//    }
 
     @RequestMapping(path = "tenmo/users", method = RequestMethod.GET)
     public  List<User> filterUserList (){
+
         return userDao.findAll();
     }
 
@@ -58,11 +58,13 @@ public class TransferController {
         if (balance.compareTo(BigDecimal.valueOf(transfer.getAmount())) >= 0){
             return transferDao.addTransfer(transfer);
         }
-        //TODO check if null in the front end, if it is, throw exception
         return null;
     }
 
+    @RequestMapping(path = "tenmo/transfers", method = RequestMethod.GET)
+    public List<Transfer> transferList(Principal principal) {
+        int id = userDao.findIdByUsername(principal.getName());
 
-
-
+        return transferDao.transferList(id);
+    }
 }

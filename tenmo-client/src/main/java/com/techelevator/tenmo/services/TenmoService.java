@@ -47,6 +47,7 @@ public class TenmoService {
 
         ResponseEntity<User[]> response = restTemplate.exchange(baseUrl + "tenmo/users", HttpMethod.GET, makeAuthEntity(), User[].class);
         users = response.getBody();
+
         for (User newUser : users) {
             if (!newUser.equals(user)) {
                 usersList.add(newUser);
@@ -71,6 +72,19 @@ public class TenmoService {
             System.out.println(e.getMessage());
         }
         return transfer;
+    }
+
+    public List<Transfer> transferList() {
+        Transfer[] transfers = null;
+        List<Transfer> transferList = new ArrayList<>();
+
+        ResponseEntity<Transfer[]> response = restTemplate.exchange(baseUrl + "tenmo/transfers", HttpMethod.GET, makeAuthEntity(), Transfer[].class);
+        transfers = response.getBody();
+
+        for(Transfer newTransfer : transfers) {
+            transferList.add(newTransfer);
+        }
+        return transferList;
     }
 
 

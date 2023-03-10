@@ -22,22 +22,6 @@ public class Transfer {
         this.transferId = transferId;
     }
 
-    public String getUsernameFrom() {
-        return usernameFrom;
-    }
-
-    public void setUsernameFrom(String usernameFrom) {
-        this.usernameFrom = usernameFrom;
-    }
-
-    public String getUsernameTo() {
-        return usernameTo;
-    }
-
-    public void setUsernameTo(String usernameTo) {
-        this.usernameTo = usernameTo;
-    }
-
     public int getTransferTypeId() {
         return transferTypeId;
     }
@@ -70,6 +54,22 @@ public class Transfer {
         this.userToId = userToId;
     }
 
+    public String getUsernameFrom() {
+        return usernameFrom;
+    }
+
+    public void setUsernameFrom(String usernameFrom) {
+        this.usernameFrom = usernameFrom;
+    }
+
+    public String getUsernameTo() {
+        return usernameTo;
+    }
+
+    public void setUsernameTo(String usernameTo) {
+        this.usernameTo = usernameTo;
+    }
+
     public double getAmount() {
         return amount;
     }
@@ -77,14 +77,4 @@ public class Transfer {
     public void setAmount(double amount) {
         this.amount = amount;
     }
-
-//    public String toString() {
-//        return "Transfer{" +
-//                "transferId=" + transferId +
-//                ", transferTypeId=" + transferTypeId +
-//                ", transferStatusId=" + transferStatusId +
-//                ", accountFrom=" + accountFrom +
-//                ", accountTo=" + accountTo +
-//                ", amount=" + amount +
-//                '}';
-    }
+}
