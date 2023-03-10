@@ -24,14 +24,14 @@ public class JbdcTransferDao implements TransferDao{
         //1. look up account id for the sender and receiver
         //2. insert into transfer table
         //3. update sender and receiver account
-        int userFromId = 0;
-        int userToId = 0;
+        int accountFrom = 0;
+        int accountTo = 0;
         String sqlFrom = "SELECT account.account_id FROM account " +
                 "JOIN tenmo_user ON tenmo_user.user_id = account.user_id " +
                 "WHERE account.user_id = ?;";
         SqlRowSet resultsFromAccount = jdbcTemplate.queryForRowSet(sqlFrom, transfer.getUserFromId());
         if (resultsFromAccount.next()) {
-            userFromId = resultsFromAccount.getInt("account_id");
+            accountFrom = resultsFromAccount.getInt("account_id");
         }
 
         String sqlTo = "SELECT account.account_id FROM account " +
@@ -39,20 +39,20 @@ public class JbdcTransferDao implements TransferDao{
                 "WHERE account.user_id = ?;";
         SqlRowSet resultsToAccount = jdbcTemplate.queryForRowSet(sqlTo, transfer.getUserToId());
         if (resultsToAccount.next()) {
-            userToId = resultsToAccount.getInt("account_id");
+            accountTo = resultsToAccount.getInt("account_id");
         }
 
         String sqlInsert = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
                 "VALUES (2, 2, ?, ?, ?) RETURNING transfer.transfer_id;";
         Integer newId = jdbcTemplate.queryForObject(sqlInsert, Integer.class,
-                userFromId, userToId, transfer.getAmount());
+                accountFrom, accountTo, transfer.getAmount());
         transfer.setTransferId(newId);
 
         String updateFrom = "UPDATE account SET balance = balance - ? WHERE user_id = ?;";
-        jdbcTemplate.update(updateFrom, transfer.getAmount(), userFromId);
+        jdbcTemplate.update(updateFrom, transfer.getAmount(), transfer.getUserFromId());
 
         String updateTo = "UPDATE account SET balance = balance + ? WHERE user_id = ?;";
-        jdbcTemplate.update(updateTo, transfer.getAmount(), userToId);
+        jdbcTemplate.update(updateTo, transfer.getAmount(), transfer.getUserToId());
 
         return transfer;
     }
@@ -61,28 +61,19 @@ public class JbdcTransferDao implements TransferDao{
     public List<Transfer> transferList (int userId){
         List<Transfer> transferList = new ArrayList<>();
 
-        String sqlFrom = "SELECT transfer.transfer_id, transfer.amount, transfer.account_from, transfer.account_to, transfer.transfer_status_id, transfer.transfer_type_id " +
-                "FROM transfer " +
-                "JOIN account ON transfer.account_from = account.account_id " +
-                "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
-                "WHERE tenmo_user.user_id = ?;";
+        String sql = "SELECT transfer.transfer_id, userFrom.user_id AS user_id_from, userFrom.username AS user_from, " +
+                "userTo.user_id AS user_id_to, userTo.username AS user_to, transfer.amount " +
+        "FROM transfer " +
+        "JOIN account AS acctFrom ON transfer.account_from = acctFrom.account_id " +
+        "JOIN tenmo_user AS userFrom ON acctFrom.user_id = userFrom.user_id " +
+        "JOIN account AS acctTo ON transfer.account_to = acctTo.account_id " +
+        "JOIN tenmo_user AS userTo ON acctTo.user_id = userTo.user_id " +
+        "WHERE userFrom.user_id = ? OR userTo.user_id = ?;";
 
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sqlFrom, userId);
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId, userId);
 
         while(results.next()) {
             transferList.add(mapRowToTransfer(results));
-        }
-
-        String sqlTo = "SELECT  transfer.transfer_id, transfer.amount, transfer.account_from, transfer.account_to, transfer.transfer_status_id, transfer.transfer_type_id " +
-                "FROM transfer " +
-                "JOIN account ON transfer.account_to = account.account_id " +
-                "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
-                "WHERE tenmo_user.user_id = ?;";
-
-        SqlRowSet resultsTo = jdbcTemplate.queryForRowSet(sqlTo, userId);
-
-        while(resultsTo.next()) {
-            transferList.add(mapRowToTransfer(resultsTo));
         }
         return transferList;
     }
@@ -91,11 +82,11 @@ public class JbdcTransferDao implements TransferDao{
     private Transfer mapRowToTransfer(SqlRowSet result) {
         Transfer transfer = new Transfer();
         transfer.setTransferId(result.getInt("transfer_id"));
-        transfer.setUserFromId(result.getInt("account_from"));
-        transfer.setUserToId(result.getInt("account_to"));
-        transfer.setTransferTypeId(result.getInt("transfer_type_id"));
         transfer.setAmount(result.getDouble("amount"));
-        transfer.setTransferStatusId(result.getInt("transfer_status_id"));
+        transfer.setUserFromId(result.getInt("user_id_from"));
+        transfer.setUserToId(result.getInt("user_id_to"));
+        transfer.setUsernameFrom(result.getString("user_from"));
+        transfer.setUsernameTo(result.getString("user_to"));
         return transfer;
         }
 

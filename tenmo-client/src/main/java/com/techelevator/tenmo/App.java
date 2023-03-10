@@ -1,11 +1,15 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TenmoService;
 import org.springframework.http.ResponseEntity;
+
+import java.math.BigDecimal;
 
 public class App {
 
@@ -103,7 +107,23 @@ public class App {
 	}
 
 	private void sendBucks() {
-		consoleService.printFilteredList(tenmoService.filteredUserList(currentUser.getUser()));
+        Transfer transfer = new Transfer();
+
+        consoleService.printFilteredList(tenmoService.filteredUserList(currentUser.getUser()));
+
+        int userToId = consoleService.promptForInt("Please enter a User Id");
+        transfer.setUserToId(userToId);
+        transfer.setUserFromId(currentUser.getUser().getId());
+        transfer.setTransferStatusId(2);
+        transfer.setTransferTypeId(2);
+
+        BigDecimal amount = consoleService.promptForBigDecimal("Please enter transaction amount: ");
+        transfer.setAmount(amount.doubleValue());
+
+        if(transfer == null){
+            consoleService.printErrorMessage();
+        }
+        tenmoService.addTransfer(transfer);
 	}
 
 	private void requestBucks() {
