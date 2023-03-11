@@ -109,8 +109,8 @@ public class ConsoleService {
     public void printTransferList(List<Transfer> transferList) {
         System.out.printf("%-5s %-5s %-5s\n", "Transfers ID", "From/To", "Amount");
         for (Transfer transfer : transferList) {
-                System.out.printf("%-5d %-5s %-5d\n", transfer.getTransferId(), transfer.getUsernameFrom(), transfer.getAmount());
-                System.out.printf("%-5d %-5s %-5d\n", transfer.getTransferId(), transfer.getUsernameTo(), transfer.getAmount());
+                System.out.printf("%-5d %-5s %-5.2f\n", transfer.getTransferId(), transfer.getUsernameFrom(), transfer.getAmount());
+                System.out.printf("%-5d %-5s %-5.2f\n", transfer.getTransferId(), transfer.getUsernameTo(), transfer.getAmount());
             }
         }
     }

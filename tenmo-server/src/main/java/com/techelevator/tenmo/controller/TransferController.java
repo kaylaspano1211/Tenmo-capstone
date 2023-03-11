@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -53,12 +54,14 @@ public class TransferController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "tenmo/transfers", method = RequestMethod.POST)
-    public Transfer addTransfer(@Valid @RequestBody Transfer transfer, Principal principal){
+    public Transfer addTransfer(@Valid @RequestBody Transfer transfer, Principal principal) {
         BigDecimal balance = accountDao.retrieveBalance(userDao.findIdByUsername(principal.getName())).getBalance();
-        if (balance.compareTo(BigDecimal.valueOf(transfer.getAmount())) >= 0){
+        if (balance.compareTo(BigDecimal.valueOf(transfer.getAmount())) < 0){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer amount exceeds balance.");
+        } else {
             return transferDao.addTransfer(transfer);
         }
-        return null;
+
     }
 
     @RequestMapping(path = "tenmo/transfers", method = RequestMethod.GET)

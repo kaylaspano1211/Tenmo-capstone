@@ -21,7 +21,7 @@ public class TenmoService {
     private final String baseUrl;
     private final RestTemplate restTemplate = new RestTemplate();
     private String authToken = null;
-
+    private BigDecimal balance;
 
     public TenmoService(String url) {
         this.baseUrl = url;
@@ -32,7 +32,7 @@ public class TenmoService {
     }
 
     public BigDecimal getBalance() {
-        BigDecimal balance;
+//        BigDecimal balance;
         Account account = new Account();
         ResponseEntity<Account> response = restTemplate.exchange(baseUrl + "tenmo/accounts", HttpMethod.GET, makeAccountEntity(account), Account.class);
         account = response.getBody();
@@ -57,17 +57,16 @@ public class TenmoService {
     }
 
 
-    public Transfer addTransfer(Transfer transfer) {
-        Account account = new Account();
-        BigDecimal balance = account.getBalance();
-
+    public Transfer addTransfer(Transfer transfer) throws ResponseStatusException {
+        BigDecimal transferBalance = getBalance();
+        if (transferBalance.compareTo(BigDecimal.valueOf(transfer.getAmount())) < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer amount exceeds balance.");
+        }
 
         try {
             ResponseEntity<Transfer> response = restTemplate.exchange(baseUrl + "tenmo/transfers", HttpMethod.POST, makeTransferEntity(transfer), Transfer.class);
             transfer = response.getBody();
-//            if (balance.compareTo(BigDecimal.valueOf(transfer.getAmount())) >= 0) {
-//                return transfer;
-//            }
+
         } catch (RestClientResponseException | ResourceAccessException e){
             System.out.println(e.getMessage());
         }

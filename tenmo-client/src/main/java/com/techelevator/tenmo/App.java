@@ -8,6 +8,9 @@ import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TenmoService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientResponseException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 
@@ -112,7 +115,7 @@ public class App {
 
         consoleService.printFilteredList(tenmoService.filteredUserList(currentUser.getUser()));
 
-        int userToId = consoleService.promptForInt("Please enter a User Id");
+        int userToId = consoleService.promptForInt("Please enter a User Id: ");
         transfer.setUserToId(userToId);
         transfer.setUserFromId(currentUser.getUser().getId());
         transfer.setTransferStatusId(2);
@@ -121,10 +124,17 @@ public class App {
         BigDecimal amount = consoleService.promptForBigDecimal("Please enter transaction amount: ");
         transfer.setAmount(amount.doubleValue());
 
-        if(transfer == null){
+        try{
+            tenmoService.addTransfer(transfer);
+        }
+        catch (ResponseStatusException e){
             consoleService.printErrorMessage();
         }
-        tenmoService.addTransfer(transfer);
+
+//        if(ResponseStatusException == true){
+//            consoleService.printErrorMessage();
+//        }
+
 	}
 
 	private void requestBucks() {

@@ -48,11 +48,13 @@ public class JbdcTransferDao implements TransferDao{
                 accountFrom, accountTo, transfer.getAmount());
         transfer.setTransferId(newId);
 
+
         String updateFrom = "UPDATE account SET balance = balance - ? WHERE user_id = ?;";
         jdbcTemplate.update(updateFrom, transfer.getAmount(), transfer.getUserFromId());
 
         String updateTo = "UPDATE account SET balance = balance + ? WHERE user_id = ?;";
         jdbcTemplate.update(updateTo, transfer.getAmount(), transfer.getUserToId());
+
 
         return transfer;
     }
