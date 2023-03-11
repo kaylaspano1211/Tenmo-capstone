@@ -102,15 +102,34 @@ public class ConsoleService {
     public void printFilteredList(List<User> filteredUserList) {
         System.out.printf("%-5s %-5s\n", "UserId", "Username");
         for (User user : filteredUserList) {
-           System.out.printf("%-5d %-5s\n", user.getId(), user.getUsername());
-       }
+            System.out.printf("%-5d %-5s\n", user.getId(), user.getUsername());
+        }
     }
 
-    public void printTransferList(List<Transfer> transferList) {
-        System.out.printf("%-5s %-5s %-5s\n", "Transfers ID", "From/To", "Amount");
+    public void printTransferList(List<Transfer> transferList, String username) {
+        System.out.printf("%-5s %14s %12s\n", "Transfers \nID", "From/To", "Amount");
         for (Transfer transfer : transferList) {
-                System.out.printf("%-5d %-5s %-5.2f\n", transfer.getTransferId(), transfer.getUsernameFrom(), transfer.getAmount());
-                System.out.printf("%-5d %-5s %-5.2f\n", transfer.getTransferId(), transfer.getUsernameTo(), transfer.getAmount());
+            if (username.equals(transfer.getUsernameFrom())) {
+                System.out.printf("%-8d %8s %-5s $%-5.2f\n", transfer.getTransferId(), "To: ", transfer.getUsernameTo(), transfer.getAmount());
+            } else {
+                System.out.printf("%-8d %8s %-5s $%-5.2f\n", transfer.getTransferId(), "From: ", transfer.getUsernameFrom(), transfer.getAmount());
             }
         }
     }
+
+    public int retrieveTransferId(String prompt){
+        System.out.println("Please enter transfer ID to view details (0 to cancel): ");
+
+        return Integer.parseInt(scanner.nextLine());
+    }
+
+    public void printTransferDetails(Transfer transfer){
+        System.out.println("\nTransfer Details\n");
+        System.out.println("Id: " + transfer.getTransferId());
+        System.out.println("From: " + transfer.getUsernameFrom());
+        System.out.println("To: " + transfer.getUsernameTo());
+        System.out.println("Type: Send");
+        System.out.println("Status: Approved");
+        System.out.println("Amount: " + transfer.getAmount());
+    }
+}

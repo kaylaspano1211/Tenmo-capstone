@@ -80,6 +80,29 @@ public class JbdcTransferDao implements TransferDao{
         return transferList;
     }
 
+    public Transfer retrieveTransferById(int transferId, int userId){
+        Transfer transfer = null;
+
+        String sql = "SELECT transfer.transfer_id, userFrom.user_id AS user_id_from, userFrom.username AS user_from, " +
+                "userTo.user_id AS user_id_to, userTo.username AS user_to, transfer.amount " +
+                "FROM transfer " +
+                "JOIN account AS acctFrom ON transfer.account_from = acctFrom.account_id " +
+                "JOIN tenmo_user AS userFrom ON acctFrom.user_id = userFrom.user_id " +
+                "JOIN account AS acctTo ON transfer.account_to = acctTo.account_id " +
+                "JOIN tenmo_user AS userTo ON acctTo.user_id = userTo.user_id " +
+                "WHERE (userFrom.user_id = ? OR userTo.user_id = ?)" +
+                "AND transfer_id = ?;";
+
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId, userId, transferId);
+
+        if (results.next()){
+            transfer = mapRowToTransfer(results);
+        }
+        return transfer;
+
+    }
+
+
 
     private Transfer mapRowToTransfer(SqlRowSet result) {
         Transfer transfer = new Transfer();

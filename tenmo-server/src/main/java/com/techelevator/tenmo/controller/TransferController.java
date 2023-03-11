@@ -59,9 +59,9 @@ public class TransferController {
         if (balance.compareTo(BigDecimal.valueOf(transfer.getAmount())) < 0){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer amount exceeds balance.");
         } else {
+
             return transferDao.addTransfer(transfer);
         }
-
     }
 
     @RequestMapping(path = "tenmo/transfers", method = RequestMethod.GET)
@@ -69,5 +69,12 @@ public class TransferController {
         int id = userDao.findIdByUsername(principal.getName());
 
         return transferDao.transferList(id);
+    }
+
+    @RequestMapping(path = "tenmo/transfers/{id}", method = RequestMethod.GET)
+    public Transfer retrieveTransferById(@PathVariable int id, Principal principal){
+        int userId = userDao.findIdByUsername(principal.getName());
+
+        return transferDao.retrieveTransferById(id, userId);
     }
 }

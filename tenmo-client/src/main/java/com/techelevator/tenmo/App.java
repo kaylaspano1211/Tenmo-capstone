@@ -100,12 +100,13 @@ public class App {
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-
-		consoleService.printTransferList(tenmoService.transferList());
+		consoleService.printTransferList(tenmoService.transferList(), currentUser.getUser().getUsername());
+        int transferId = consoleService.retrieveTransferId("Enter a transaction ID.");
+        consoleService.printTransferDetails(tenmoService.retrieveTransferById(transferId));
 	}
 
 	private void viewPendingRequests() {
+        // optional
 		// TODO Auto-generated method stub
 		
 	}
@@ -131,14 +132,11 @@ public class App {
             consoleService.printErrorMessage();
         }
 
-//        if(ResponseStatusException == true){
-//            consoleService.printErrorMessage();
-//        }
-
 	}
 
 	private void requestBucks() {
 		// TODO Auto-generated method stub
+        // optional
 		
 	}
 

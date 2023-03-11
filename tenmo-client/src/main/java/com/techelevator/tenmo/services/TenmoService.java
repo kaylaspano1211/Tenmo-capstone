@@ -86,6 +86,15 @@ public class TenmoService {
         return transferList;
     }
 
+    public Transfer retrieveTransferById(int transferId){
+        Transfer transfer = null;
+
+        ResponseEntity<Transfer> response = restTemplate.exchange(baseUrl + "tenmo/transfers/" + transferId, HttpMethod.GET, makeAuthEntity(), Transfer.class);
+        transfer = response.getBody();
+
+        return transfer;
+    }
+
 
     private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();

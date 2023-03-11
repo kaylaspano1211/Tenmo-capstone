@@ -9,4 +9,6 @@ public interface TransferDao {
     Transfer addTransfer(Transfer transfer);
 
     List<Transfer> transferList (int userId);
+
+    Transfer retrieveTransferById(int transferId, int userId);
 }
