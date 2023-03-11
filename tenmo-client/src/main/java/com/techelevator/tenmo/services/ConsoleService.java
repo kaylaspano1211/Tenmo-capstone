@@ -100,14 +100,19 @@ public class ConsoleService {
     }
 
     public void printFilteredList(List<User> filteredUserList) {
+        System.out.println("-------------------------------------------");
         System.out.printf("%-5s %-5s\n", "UserId", "Username");
+        System.out.println("-------------------------------------------");
         for (User user : filteredUserList) {
             System.out.printf("%-5d %-5s\n", user.getId(), user.getUsername());
         }
+        System.out.println("---------");
     }
 
     public void printTransferList(List<Transfer> transferList, String username) {
+        System.out.println("-------------------------------------------");
         System.out.printf("%-5s %14s %12s\n", "Transfers \nID", "From/To", "Amount");
+        System.out.println("-------------------------------------------");
         for (Transfer transfer : transferList) {
             if (username.equals(transfer.getUsernameFrom())) {
                 System.out.printf("%-8d %8s %-5s $%-5.2f\n", transfer.getTransferId(), "To: ", transfer.getUsernameTo(), transfer.getAmount());
@@ -115,6 +120,7 @@ public class ConsoleService {
                 System.out.printf("%-8d %8s %-5s $%-5.2f\n", transfer.getTransferId(), "From: ", transfer.getUsernameFrom(), transfer.getAmount());
             }
         }
+        System.out.println("---------");
     }
 
     public int retrieveTransferId(String prompt){
@@ -124,7 +130,9 @@ public class ConsoleService {
     }
 
     public void printTransferDetails(Transfer transfer){
+        System.out.println("-------------------------------------------");
         System.out.println("\nTransfer Details\n");
+        System.out.println("-------------------------------------------");
         System.out.println("Id: " + transfer.getTransferId());
         System.out.println("From: " + transfer.getUsernameFrom());
         System.out.println("To: " + transfer.getUsernameTo());
