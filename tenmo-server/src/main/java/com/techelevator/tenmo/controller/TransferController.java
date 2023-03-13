@@ -39,12 +39,6 @@ public class TransferController {
         return account;
     }
 
-//    @RequestMapping(path = "tenmo/transfers", method = RequestMethod.GET)
-//    public List<Transfer> transferTEBucks(Principal principal){
-//        int id = userDao.findIdByUsername(principal.getName());
-//
-//        return transferDao.transferList(id);
-//    }
 
     @RequestMapping(path = "tenmo/users", method = RequestMethod.GET)
     public  List<User> filterUserList (){
